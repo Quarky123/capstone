@@ -1,24 +1,36 @@
 ## Project and Author info
-Project: Ames Housing Prices <br />
+Project:
 Author: Dennis Chan Zhen Ye
 
 
-## Contents 
+## Contents
 - [01_data_cleaning](code/01_data_cleaning.ipynb)
 - [02_eda](code/02_eda.ipynb)
 - [03_Conclusion](code/03_Conclusion.ipynb)
 - [Datasets](datasets)
-- [Presentation](presentation/DSI%20-%20project%202.pdf)
+- [Presentation](presentation/Presentation.pdf)
 
-## Data Dictionary 
+## Data Dictionary
 
 
 ## Problem Statement
 **Context / Motivation** <br />
 
-might have to change this if i can't pull of PEAD
+<!-- might have to change this if i can't pull of PEAD -->
 
-PEAD stands for post earnings announcement drift and simply put, is the tendency for a stock’s cumulative abnormal returns to drift in the direction of an earnings surprise for several weeks (even several months) following an earnings announcement. It is a well documented phenomenon in the finance industry, is one of major earnings anomalies, which supports the counterargument against market efficiency theory (Ball & Brown, 1968). However, PEAD’s effects on certain baskets of stocks are not entirely known, particularly, those stocks that tend to be more illiquid due to their relatively smaller size in terms of market capitalisation, volume traded per day and available float. Some studies have been done on the PEAD associated with small cap stocks, which is defined as companies with market capitalisation of between 300 million USD to 2 billion USD and it is found that the PEAD for small cap stocks is almost always larger than the PEAD associated with large cap stocks (Bird, Choi & Yeung , 2011). However, there has been little research done on microcap stocks, which are defined as stocks with a market capitalisation of less than 300 million USD and given that they are even more illiquid than small cap stocks, it is expected that the PEAD effect would be even larger.
+PEAD stands for post earnings announcement drift and simply put, is the tendency for a stock’s cumulative abnormal returns to drift in the direction of an earnings surprise for several weeks (even several months) following an earnings announcement. It is a well documented phenomenon in the finance industry, is one of major earnings anomalies, which supports the counterargument against market efficiency theory (Ball & Brown, 1968). However, PEAD’s effects on certain baskets of stocks are not entirely known, particularly, those stocks that tend to be more illiquid due to their relatively smaller size in terms of market capitalisation, volume traded per day and available float. Some studies have been done on the PEAD associated with microcap stocks, which is defined as companies with market capitalisation of between 300 million USD and it is found that the PEAD for small cap stocks is almost always larger than the PEAD associated with large cap stocks (Bird, Choi & Yeung , 2011). However, there has been little research done on microcap stocks, which are defined as stocks with a market capitalisation of less than 300 million USD and given that they are even more illiquid than small cap stocks, it is expected that the PEAD effect would be even larger.
+
+The PEAD effect is measured using the SUE model. SUE stands for standardised unexpected earnings model and the (SUE) model the model also pointed out that the drifting magnitude is more obvious in small-cap firms than the large one. This report constructs SUE model with quarterly report data of the microcap market.
+
+
+SUE = (EPS(Q1) - fEPS(Q1))/SD(Q1)
+
+Where:
+
+EPS(Q1) – the earnings per share reported for a given quarter
+fEPS(Q1) – the forecasted or anticipated earnings per share for a company during the same quarter
+SD(Q1) – the standard deviation of estimated earnings for the specified quarter
+
 
 https://www.jstor.org/stable/2490232?seq=1
 https://www.uts.edu.au/sites/default/files/wp15.pdf
@@ -36,9 +48,16 @@ The secondary audience would be both the potential and existing investors in the
 As part of an attempt to understand if a strategy based around PEAD and other variants of the same concept would create performance alpha in the microcap world, the quantitative team of a multi-strategy investment fund was put in charge of backtesting how a portfolio worth $ 1 million would had perform between  2015-01-02 and 2020-12-18, which is a timeline of roughly 5 years. The fund utilises a core satellite portfolio management strategy, thus if successful, this strategy will be incorporate into the main fund under the satellite portfolio as an attempt to generate alpha.
 
 **Data Science problem statement** <br />
-The team is tasked to find the optimal overall portfolio performance using different variations of PEAD which takes into account different factors such as earnings, corporate releases and other news. The optimal portfolio will be the portfolio with the best portfolio metrics which includes the likes of a high sharpe ratio, and low maximum drawdown. The problem can be tackled with time series analysis which includes methods such as…
 
-The portfolio allocation will be done in a binary manner, where a certain percentage of the fund’s NAV will be allocated based if a stock meets the criteria, and the position will then be unwind later based on the criteria set.
+///
+add more for this
+
+The team is tasked to compare the overall portfolio performance using a PEAD strategy vs a simple buy and hold strategy of the S&P500 index. The problem can be tackled with time series analysis which includes methods such as ARIMA. The use of the SUE formula is also needed in deriving which stock positions to take.
+
+Success of the project will be evaluated on two fronts:
+First, based on how close the forecasted EPS are to the actual EPS. This can be done using the R2 score.
+Second, determining if the strategy is able to surpass the benchmarket portfolio (S&P500) by comparing them using traditional portfolio metrics which includes the likes of sharpe ratio, and maximum drawdown and cumulative returns. The portfolio with a higer sharpe ratio, lower maximum drawdown and higher cumulative returns would be the winner in that regards.
+
 
 
 
@@ -46,47 +65,68 @@ The portfolio allocation will be done in a binary manner, where a certain percen
 
 ## Executive Summary
 **Intention** <br />
-<!-- This report provides a predictive analysis of the housing sale prices surrounding Ames, a city in Iowa. Methods of analysis used in this report include the use of trend analysis, clasifications based on statistics such as mean median mode, encoding of data, as well as the use of regression analysis tools such as lasso, ridge, and elastic net. The data are also fitted into the regression analysis tool with the highest mean cross-validation score. In this case it happens to be the lasso model. -->
+This report provides a predictive analysis of the earnings per share of the next few quarters for each of the stock listed in the basket of stocks selected as well as an evaluation of whether the PEAD strategy outperforms the S&P500 index. Methods of analysis used in this report include the use of trend analysis, clasifications based on statistics such as mean median mode, encoding of data and the use of time series analysis and ARIMA analysis.
+
 
 **Process** <br />
-<!-- Given that the target (Sale Price) is a continuous varaible, linear regression models will be used. The process flow is as follows. -->
+Given that the target (EPS) is a time series, ARIMA models will be used. The process flow is as follows.
 
 1. [Data Cleaning](code/01_data_cleaning.ipynb)
- - Data validation
- - Replacement/Imputation of null values with median and 'Unknown'
- - Removal of Outliers
+ - Filter by market cap
+ - Obtain daily stock price and volume data
+ - Daily Metrics of Filtered Tickers
+ - Feature Engineering
+ - Final Export 
 
 2. [Exploratory Data Analysis (EDA)](code/02_eda.ipynb)
- - Histogram and Distribution Analysis
- - Scatterplot Analysis
- - Box Plot Analysis
+ - Basic EDA and Feature Engineering
+ - Time Series Analysis
+ - Correlation Analysis
+ - Analysis of Fundamentals
  
-3. [Model Prep and Feature Engineering](code/02_eda.ipynb)
- - Feature engineering using get_dummies
+3. [Model Prep and Predictions](code/03_data_cleaning_for_PEAD_and_EPS_STD_Predictions.ipynb)
+ - Data Preprocessing
+ - ARIMA and Naive Models
+ - Forecasting EPS and STD
 
-3. [Business Insights](code/02_eda.ipynb)
- - Comments on correlation and adding value to the house
+4. [Portfolio Allocation using PEAD](code/04_PEAD.ipynb)
+ - SUE Calculations
+ - Portfolio Backtesting
+ - Final NAV
 
 
-4. [Model Selection and Evaluation](code/03_Conclusion.ipynb)
- - Creating features and target vector
- - Instantiating Linear Regression Models (`Standard Linear`, `Lasso`, `Ridge`, and `ElasticNet`)
- - Model Selection based on Cross Validation Score
- - Model Fitting and Evaluation
- - Predicting the actual test
- - Kaggle Score
+5. [Evaluation and Conclusion](code/05_Evaluation_and_Conclusion.ipynb)
+ - Cumulative Returns
+ - Rolling Sharpe Ratio
+ - Drawdown
+
 
 
 **Key Findings** <br />
-Results of the data analysed show that certain neighborhoods command higher mean and median sale prices with StoneBr having the highest median price and MeadowV with the lowest. The report also finds the use of predictive analysis on sale prices of homes in the Aimes region based on the variables provided by the dataset is successful in predicting the sale prices of other (unknown) house prices in the same region as seen from the low kaggle score of 27355.18333. 
+- The report finds that use of ARIMA to predict the subsequent EPS is rather successful as seen from the r2 score. 
+- The report also concludes that a portfolio strategy using PEAD to allocate capital outperforms that of the S&P index on some metrics such as 
+cumulative returns
+drawdown
+rolling sharpe ratio
+////
+
+
 
 
 
 
 ## Recommendations and Conclusion
-<!-- As stated above, the model is useful for predicting house prices in the region and the predictions generated by this model could be used as input for the prediction of mortgage default risk. However, a major area of weakness is that it only provides a snapshot of what house prices between the 2006 to 2010 period, which coincidentally spans across the '08 financial crisis which was in large part due to RMBS products, specifically due to subprime mortgages who are then put into the RMBS. Thus, this may not be the price of houses in this area during normal market conditions. As such, the predictions generated by this model is likely only within the stated period. If the user hopes to generate house prices in the year 2030, it is likely to be inaccurate due to factors such as inflation which affects house prices. <br />
+As stated above, the model is useful for predicting EPS of the subsequent quarter of each stock and the predictions generated by this model could be used as input for the SUE and subsequently used to backtest a trading strategy.
 
-Besides the usefulness of the model as an input for credit default risk, other business applications could also be derived from the results. Overall Quad appears to add the most value to a home as it has a coeff of 0.803, which means that the dependent variable (Overall Quad) is expected to increase when that independent variable (SalePrice increases by one). The Id hurts the value of a home the most, perhaps there is some hidden meaning behind the Id where certain Id (for example smaller numbers) are given to more expensive areas and vice versa. However, it would be hard to speculate. Enclosed Porch with a corr of -0.135713 is the next most negatively correlated with SalePrice. Homeowners could improve could revamp the overall material and finish of the house to increase the value of the house. An investment in houses located in StoneBr is most likely to be a good investment because it has the largest interquartile range which could mean that by revamping the purchased house, the investor could command a good return on their investment. However, the results of the data might not translate well into other areas. It will likely generalise other cities with similar geography as Aimes, but it would not work for cities such as New York where spaces are scarce and land is expensive. 
- -->
+The model is also likely to outperform the S&P500 index as mentioned above.
+
+However, a major area of weakness is that it is essentially a backward looking model. Such that, the long term forecast eventually goes to be straight line and poor at predicting series with turning points. Thus, the model would had failed given the onset of the coronavirus pandemic which caused the markets to tumble as a whole with little or no regards to the EPS.
+
+Also, the liquidity of various microcap stocks may be limited due to the low float and daily traded volume for many of the stocks stated above. Thus, there are 2 problems associated with this. 
+
+///
+First, the price impact
+Second, a portfolio size that is too large may pose some problems
+///
 
 ## Citation
